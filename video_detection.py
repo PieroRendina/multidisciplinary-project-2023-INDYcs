@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as pltpatches
 from tqdm.notebook import tqdm
 import threading
+import time
 
 
 def frame_to_tensor(frame: np.ndarray):
@@ -51,14 +52,14 @@ def load_model(model_id="openai/clip-vit-base-patch32"):
 
 def run_inference(model, processor, device, prompt, patches, patch_size, window, stride):
     """
-    :param model:
-    :param processor:
-    :param device:
-    :param patches:
-    :param patch_size:
-    :param window:
-    :param stride:
-    :return:
+    Function to run the model and get the similarity scores
+    :param model: the Visual Transformer to be run
+    :param processor: the processor associated to the Transformer to run
+    :param device: the hardware devoted to run the model
+    :param patches: the patches drawn from the frame
+    :param patch_size: the size of the patches
+    :param window: the amount of patches seen by the model
+    :return: scores associated to the big patches
     """
     scores = torch.zeros(patches.shape[1], patches.shape[2])
     runs = torch.ones(patches.shape[1], patches.shape[2])
@@ -131,21 +132,24 @@ def detect(model, processor, device, prompts, frame, patch_size=64, window=3, st
     frame_patches = get_frame_patches(frame, patch_size)
     frame_t = frame_to_tensor(frame)
     # convert image to format for displaying with matplotlib
+    """
     image = np.moveaxis(frame_t.data.numpy(), 0, -1)
     X = frame_patches.shape[1]
     Y = frame_patches.shape[2]
     # initialize plot to display image + bounding boxes
     fig, ax = plt.subplots(figsize=(Y*0.5, X*0.5))
     ax.imshow(image)
+    """
     # process image through object detection steps
     for i, prompt in enumerate(tqdm(prompts)):
         scores = run_inference(model, processor, device, prompt, frame_patches, patch_size, window, stride)
         x, y, width, height = get_box(scores, patch_size, threshold)
         # create the bounding box
-        rect = pltpatches.Rectangle((x, y), width, height, linewidth=3, edgecolor=colors[i], facecolor='none')
+        # rect = pltpatches.Rectangle((x, y), width, height, linewidth=3, edgecolor=colors[i], facecolor='none')
+        cv2.rectangle(frame, (x, y), (x+width, y+height), [0, 255, 0])
         # add the patch to the Axes
-        ax.add_patch(rect)
-    plt.show()
+        # ax.add_patch(rect)
+    cv2.imshow("Frame", frame)
 
 
 
@@ -174,7 +178,10 @@ def show_video_and_detect(input_file_path, prompts):
             if key & 0xFF == ord('q'):
                 break
             elif key == 32:
+                t0 = time.time()
                 detect(model, processor, prompts=prompts, device=device, frame=frame)
+                t1 = time.time()
+                print(f"Time for detection = {t1-t0}")
                 cv2.waitKey()
         # Break the loop
         else:
