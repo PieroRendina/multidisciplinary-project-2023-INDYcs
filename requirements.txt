@@ -1,0 +1,5 @@
+torchvision
+transformers
+opencv-python
+tqdm
+numpy
