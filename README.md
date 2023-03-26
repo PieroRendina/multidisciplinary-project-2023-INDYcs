@@ -1,1 +1,1 @@
-# MDP-2023-video-object-detection
+# Video Object Detection

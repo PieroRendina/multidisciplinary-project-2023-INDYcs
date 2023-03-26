@@ -115,7 +115,8 @@ def get_box(scores, patch_size, threshold):
 
 def detect(model, processor, device, prompts, frame, patch_size=64, window=3, stride=1, threshold=0.5):
     """
-    Function to the detect the objects in the frame
+    Function to the detect the objects in the frame. It uses the frames to look for the specified items.
+    It creates a plot of the image containing the detected objects.
     :param model: model to run for the inference
     :param processor: processor associated to the model
     :param device: the hardware used to run the inference
@@ -148,9 +149,10 @@ def detect(model, processor, device, prompts, frame, patch_size=64, window=3, st
 
 
 
-def show_video_and_detect(input_file_path):
+def show_video_and_detect(input_file_path, prompts):
     """
-    Function to show the video through an external window
+    Function to show the video in an external window.
+    When the video is paused the detection algorithm is run with the specified prompts.
     @param: input_file_path path of the video to be shown
     """
     # Show the video
@@ -172,7 +174,7 @@ def show_video_and_detect(input_file_path):
             if key & 0xFF == ord('q'):
                 break
             elif key == 32:
-                detect(model, processor, prompts=["black t-shirt"], device=device, frame=frame)
+                detect(model, processor, prompts=prompts, device=device, frame=frame)
                 cv2.waitKey()
         # Break the loop
         else:
@@ -186,4 +188,5 @@ def show_video_and_detect(input_file_path):
 
 
 if __name__ == '__main__':
-    show_video_and_detect("F:\\Yolo_v3_pretrained\\dataset\\videos\\Iron Man vs Loki - We have a Hulk - Suit Up Scene  The Avengers (2012) Movie Clip HD.mp4")
+    show_video_and_detect("F:\\Yolo_v3_pretrained\\dataset\\videos\\Iron Man vs Loki - We have a Hulk - Suit Up Scene  The Avengers (2012) Movie Clip HD.mp4",
+                          prompts=["black t-shirt"])
