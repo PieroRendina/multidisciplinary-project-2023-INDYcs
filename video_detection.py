@@ -195,5 +195,5 @@ def show_video_and_detect(input_file_path, prompts):
 
 
 if __name__ == '__main__':
-    show_video_and_detect("F:\\Yolo_v3_pretrained\\dataset\\videos\\Iron Man vs Loki - We have a Hulk - Suit Up Scene  The Avengers (2012) Movie Clip HD.mp4",
+    show_video_and_detect("E:\\Yolo_v3_pretrained\\dataset\\videos\\Iron Man vs Loki - We have a Hulk - Suit Up Scene  The Avengers (2012) Movie Clip HD.mp4",
                           prompts=["black t-shirt"])
