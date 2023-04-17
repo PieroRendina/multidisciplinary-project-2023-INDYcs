@@ -3,3 +3,4 @@ transformers
 opencv-python
 tqdm
 numpy
+pymongo
