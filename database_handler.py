@@ -12,7 +12,8 @@ def db_connection(username, password):
     username = quote_plus(username)
     password = quote_plus(password)
     cluster = 'cluster0.hns6k.mongodb.net'
-    uri = 'mongodb+srv://' + username + ':' + password + '@' + cluster
+    options = '/authSource=admin?ssl=true&tlsAllowInvalidCertificates=true'
+    uri = 'mongodb+srv://' + username + ':' + password + '@' + cluster + options
     client = pymongo.MongoClient(uri)
     return client
 

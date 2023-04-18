@@ -5,9 +5,26 @@ from torchvision import transforms
 from transformers import CLIPProcessor, CLIPModel
 from tqdm.notebook import tqdm
 import time
+import random
+from database_handler import *
 
-movie_url_dict = {
-    "iron man vs loki": "E:\\Yolo_v3_pretrained\\dataset\\videos\\Iron Man vs Loki - We have a Hulk - Suit Up Scene  The Avengers (2012) Movie Clip HD.mp4"
+folder = "E:\\Yolo_v3_pretrained\\dataset\\videos\\"
+# dictionary to map the movie title and the respective local filepath
+movie_filepath_dict = {
+    "iron man vs loki": folder + "Iron Man vs Loki - We have a Hulk - Suit Up Scene  "
+                                 "The Avengers (2012) Movie Clip HD.mp4",
+    "avengers age of ultron": folder + "Bruce Banner and Tony Stark put Jarvis Into "
+                                       "Body - Avengers Age of Ultron (2015) Movie Clip HD Scene.mp4",
+    "i love me": folder + "Demi Lovato - I Love Me (Official Video).mp4",
+    "devil wears prada andy makeover": folder + "The Devil Wears Prada (45) Movie "
+                                                "CLIP - Andy Gets a Makeover (2006) HD.mp4",
+    "devil wears prada andy interview": folder + "The Devil Wears Prada (25) Movie "
+                                                 "CLIP - Andys Interview (2006) HD.mp4",
+    "no time to die": folder + "NO TIME TO DIE (2021)  Nuovo Trailer ITA del film con "
+                               "007.mp4",
+    "hot and cold": folder + "Katy Perry - Hot N Cold (Official).mp4",
+    "inception": folder + "Inception - Ending.mp4",
+    "the escape from limbo": folder + "The Escape from Limbo Inception ending Deja Vu.mp4"
 }
 
 
@@ -153,30 +170,45 @@ def detect(model, processor, device, prompts, frame, patch_size=64, window=3, st
     cv2.imshow("Frame", frame)
 
 
-def show_video_and_detect(movie_title: str, frame_per_second: float):
-    url = movie_url_dict[movie_title.lower()]
+def show_video_and_detect(movie_title: str, movies_collection):
+    url = movie_filepath_dict[movie_title.lower()]
     capture = cv2.VideoCapture(url)
-    current_frame = 0
-    t0 = time.time()
-    fps = np.ceil(capture.get(cv2.CAP_PROP_FPS))
-    skip_frames = int(fps / frame_per_second)
+    # For developing purpose, we are using the same fps as the detection algorithm
+    # to retrieve the closest frame.
+    fps = 0.1  # np.ceil(capture.get(cv2.CAP_PROP_FPS))
     # Till the end of the video
     while capture.isOpened():
         ret, frame = capture.read()
 
         if ret:
-            cv2.imshow("Frame", frame)
+            cv2.imshow(movie_title, frame)
             # Press Q on keyboard to exit
             key = cv2.waitKey(25)
             if key & 0xFF == ord('q'):
                 break
             elif key == 32:
+                elapsed_seconds = capture.get(cv2.CAP_PROP_POS_MSEC) * 1e-3
+                # debugging purpose
+                # print("Elapsed seconds = {}".format(elapsed_seconds))
+                elapsed_frames = int(np.floor(elapsed_seconds * fps))
+                print("Elapsed frames = {}".format(elapsed_frames))
                 t0 = time.time()
                 # TODO Add database query
+                bounding_boxes = get_frame_bounding_boxes(movies_collection, movie_title, elapsed_frames)
+                print(f"Bounding boxes found = {bounding_boxes}")
+                # TODO add boxes adjustments
+                for bb in bounding_boxes:
+                    cv2.rectangle(frame,  # frame
+                                  (bb[0],  # x
+                                   bb[1]),  # y
+                                  (bb[0] + bb[2],  # width
+                                   bb[1] + bb[3]),  # length
+                                  [255, 0, 0]) # red box
+
+                cv2.imshow(movie_title, frame)
                 t1 = time.time()
-                print(f"Time for retrieval = {t1 - t0}")
+                print("Time for retrieval = {%.3f}" % (t1 - t0))
                 cv2.waitKey()
-        # Break the loop
         else:
             break
     # When everything done, release
@@ -188,5 +220,12 @@ def show_video_and_detect(movie_title: str, frame_per_second: float):
 
 
 if __name__ == '__main__':
-    movie_title = "iron man vs loki"
-    print(movie_url_dict[movie_title.lower()])
+    """
+    print("Type the title of the movie: ", end="")
+    movie_title = input()
+    print(movie_title)
+    """
+    client = db_connection('','')
+    movies_info = client.movies.movies_info
+    movie_title = "Iron Man vs Loki"
+    show_video_and_detect(movie_title, movies_info)
