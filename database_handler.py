@@ -32,3 +32,24 @@ def get_frame_bounding_boxes(collection, movie_title, frame_id):
     # TODO: it's assuming that the frame exists and it will be the first to be returned
     bounding_boxes = frame_info[0]["frame"]["Coordinates"]
     return bounding_boxes
+
+
+def get_detection_shape(collection, movie_title):
+    """
+    Method to retrieve the size of the frames used when running the detection algorithm
+    :param collection: MongoDB collection which stores a document for each movie with its own array of frames
+    :param movie_title: title of the movie whose frame is to retrieve
+    :return detection_shape: shape of the frames used for formerly running the detection algorithm
+    """
+
+    height_doc = collection.aggregate([{"$match": {"title": movie_title}},
+                                       {"$project": {"height": {"$arrayElemAt": ["$detection_size", 0]}}}])
+    width_doc = collection.aggregate([{"$match": {"title": movie_title}},
+                                      {"$project": {"width": {"$arrayElemAt": ["$detection_size", 1]}}}])
+    height_doc = height_doc.next()
+    width_doc = width_doc.next()
+    height = height_doc["height"]
+    width = width_doc["width"]
+    detection_shape = (height, width)
+    print(detection_shape)
+    return detection_shape
