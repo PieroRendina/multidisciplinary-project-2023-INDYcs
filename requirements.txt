@@ -4,3 +4,7 @@ opencv-python
 tqdm
 numpy
 pymongo
+youtube_dl==2020.12.7
+pafy
+Flask
+pytube
