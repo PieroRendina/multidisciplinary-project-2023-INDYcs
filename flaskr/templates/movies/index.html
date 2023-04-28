@@ -12,8 +12,8 @@
       <header>
         <div>
             <h1><a href="{{ url_for('static', filename='/uploads/'+movie['title']+'.mp4') }}">{{ movie['title'] }}</a></h1>
-            <form action="show_movie" method="post">
-            <input type="hidden" name="title" id="title" value="{{ url_for('static', filename='uploads/'+movie['title']+'.mp4') }}">
+            <form action="select_movie" method="post">
+            <input type="hidden" name="title" id="title" value="{{ url_for('static', filename='/uploads/'+movie['title']+'.mp4') }}">
             <input type="submit" value="Show movie">
             </form>
         </div>

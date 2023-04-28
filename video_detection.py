@@ -228,5 +228,5 @@ if __name__ == '__main__':
     client = db_connection('Piero_Rendina', 'R3nd1n@2021')
     movie_title = "Iron Man vs Loki"
     movies_info = client.movies.movies_info
-    get_detection_shape(movies_info, movie_title=movie_title)
-    #show_video_and_detect(movie_title, movies_info)
+    #get_detection_shape(movies_info, movie_title=movie_title)
+    show_video_and_detect(movie_title, movies_info)
