@@ -6,6 +6,10 @@
 
 {% block content %}
     <body>
-    <img src="{{ url_for('movies.show_movie') }}">
+        <div class="movie_container">
+        <img src="{{ url_for('movies.show_movie') }}" width="100%" height="100%">
+        </div>
     </body>
 {% endblock %}
+
+

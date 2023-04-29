@@ -9,6 +9,7 @@ from werkzeug.exceptions import abort
 # from flaskr.db import get_db
 
 bp = Blueprint('movies', __name__)
+global video_capture
 
 
 @bp.route('/', methods=["GET", "POST"])
@@ -41,6 +42,7 @@ def show_movie():
 def generate_movie_frames(title):
     # TODO change this according to the location of the file
     filepath = "flaskr" + title
+    global video_capture
     video_capture = cv2.VideoCapture(filepath)
     audio_capture = MediaPlayer(filepath)
     # Check if camera opened successfully
@@ -63,4 +65,5 @@ def generate_movie_frames(title):
             # To adjust the frame rate and the speed of the video-player
             cv2.waitKey(25)
 
-
+        else:
+            break
