@@ -9,6 +9,24 @@
         <div class="movie_container">
         <img src="{{ url_for('movies.show_movie') }}" width="100%" height="100%">
         </div>
+        <button class=play-pause-button id="pause-video-button">
+            <span class="pause-icon"></span>
+            <span class="play-icon"></span>
+        </button>
+          <script>
+            var button = document.querySelector('#pause-video-button');
+            button.addEventListener('click', function() {
+            button.classList.toggle('paused');
+            });
+            button.addEventListener('click', function() {
+              fetch('/pause_video', {
+                method: 'POST'
+              })
+              .then(response => console.log(response))
+              .catch(error => console.error(error));
+            });
+          </script>
+
     </body>
 {% endblock %}
 
