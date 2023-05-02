@@ -1,6 +1,6 @@
 import ffpyplayer
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, Response
+    Blueprint, flash, g, redirect, render_template, request, url_for, Response, make_response, jsonify
 )
 import cv2
 from ffpyplayer.player import MediaPlayer
@@ -28,11 +28,11 @@ def index():
 
 @bp.route('/select_movie', methods=["GET", "POST"])
 def select_movie():
-    is_playing = eval(request.form["is_playing"])
     if request.method == "POST":
         global title
         title = request.form['title']
-        return render_template('movies/show_movie.html', title=title, playing=True)
+        print(title)
+        return render_template('movies/show_movie.html', title=title)
 
 
 @bp.route('/show_movie')
@@ -43,11 +43,7 @@ def show_movie():
 
 @bp.route('/pause_video', methods=['POST'])
 def pause_video():
-    global frame_id
-    # Store the frame we are stopping at
-    frame_id = int(video_capture.get(cv2.CAP_PROP_POS_FRAMES))
-    video_capture.release()
-    return 'Video paused'
+    return make_response(jsonify({'success': 'true', 'payload': 'video paused'}), 200)
 
 
 def generate_movie_frames(title, frame_number=0):
@@ -76,7 +72,7 @@ def generate_movie_frames(title, frame_number=0):
         print("Error opening video file")
         # Read until video is completed
     while video_capture.isOpened():
-        success, frame = video_capture.read()  # read the camera frame
+        success, frame = video_capture.read()  # read the camera framez
         audio_frame, val = audio_capture.get_frame()
         if success:
             ret, buffer = cv2.imencode('.jpg', frame)

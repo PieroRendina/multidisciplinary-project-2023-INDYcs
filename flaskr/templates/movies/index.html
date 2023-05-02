@@ -14,7 +14,7 @@
             <h1>{{ movie['title'].replace("_"," ") }}</a></h1>
             <form action="select_movie" method="post">
             <input type="hidden" name="is_playing" value="{{ False }}">
-            <input type="hidden" name="title" id="title" value="{{url_for('static', filename='/uploads/'+movie['title']+'.mp4')}}">
+            <input type="hidden" name="title" id="title" value="{{movie['title']}}">
             <input type="submit" value="Show movie">
             </form>
         </div>
