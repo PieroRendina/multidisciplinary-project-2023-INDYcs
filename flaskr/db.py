@@ -32,11 +32,9 @@ def get_frame_bounding_boxes(movie_title, frame_id):
     :param frame_id: id of the frame to retrieve
     :return bounding_boxes: bounding boxes associated to the requested frame_id
     """
-    print(db.movies_info)
     frame_info = db.movies_info.aggregate([{"$match": {"title": movie_title}},
                                        {"$project": {"frame": {"$arrayElemAt": ["$frames", frame_id]}}}])
     frame_info = list(frame_info)
-    print(frame_info)
     # TODO: it's assuming that the frame exists and it will be the first to be returned
     bounding_boxes = frame_info[0]["frame"]["Coordinates"]
     return bounding_boxes

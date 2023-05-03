@@ -6,12 +6,11 @@
 
 {% block content %}
     <body>
+    <div style="position: relative; width: 100%; height: 100%;">
     <video id="video_id" src="{{url_for('static', filename='/uploads/'+title+'.mp4')}}" height = "100%" width="100%" controls></video>
     <script>
         let video = document.getElementById('video_id');
-        let isPaused = video.paused;
-        if (isPaused) {
-            video.addEventListener('pause', function() {
+        video.addEventListener('pause', function() {
             let currentFrame = video.currentTime * 24;
             console.log('Current frame:', currentFrame);
             fetch('/pause_video', {
@@ -21,10 +20,27 @@
                     'current_frame': currentFrame
                 })
             }).then(response => response.json())
-                .then(data => console.log(data))
+                .then((data) => {
+                    let bounding_box = data.bounding_boxes[0];
+                    console.log(data.bounding_boxes);
+                    let overlay_string = document.createElement('div');
+                    overlay_string.style.position = 'absolute';
+                    // compute the position to place the string
+                    let topValue = (parseInt(bounding_box[0])+parseInt(bounding_box[2])*0.5).toString()+"px";
+                    let leftValue = (parseInt(bounding_box[1])+parseInt(bounding_box[3])*0.5).toString()+"px";
+                    console.log(topValue, leftValue);
+                    overlay_string.style.top = topValue;
+                    overlay_string.style.left = leftValue;
+                    overlay_string.style.color = 'red';
+                    overlay_string.style.fontSize = '24px';
+                    overlay_string.style.fontWeight = 'bold';
+                    overlay_string.innerText = "black t-shirt";
+                    video.parentElement.appendChild(overlay_string);
+                })
                 .catch(error => console.error(error));
-        })}
+        });
     </script>
+    </div>
     </body>
 {% endblock %}
 

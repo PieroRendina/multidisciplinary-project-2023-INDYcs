@@ -32,9 +32,6 @@ def select_movie():
     if request.method == "POST":
         global title
         title = request.form['title']
-        print(title)
-        bb = get_frame_bounding_boxes(movie_title="Iron Man vs Loki", frame_id=1)
-        print(bb)
         return render_template('movies/show_movie.html', title=title)
 
 
@@ -46,7 +43,9 @@ def show_movie():
 
 @bp.route('/pause_video', methods=['POST'])
 def pause_video():
-    return make_response(jsonify({'success': 'true', 'payload': 'video paused'}), 200)
+    bb = get_frame_bounding_boxes(movie_title="Iron Man vs Loki", frame_id=1)
+    print(bb)
+    return make_response(jsonify({'success': 'true', 'bounding_boxes': bb}), 200)
 
 
 def generate_movie_frames(title, frame_number=0):
