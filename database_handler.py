@@ -2,9 +2,21 @@ import pymongo
 from urllib.parse import quote_plus
 
 
-def db_connection(username, password):
+def db_connection(username: str, password: str) -> pymongo.MongoClient:
     """
     Method to instantiate a connection to a MongoDB Atlas instance
+    :param username: username to access the database
+    :param password: password to access the database
+    :return client: a client connected to the database instance
+    """
+    uri = get_db_uri(username, password)
+    client = pymongo.MongoClient(uri)
+    return client
+
+
+def get_db_uri(username: str, password: str) -> str:
+    """
+    Method to retrieve the connection URI for a MongoDB Atlas instance
     :param username: username to access the database
     :param password: password to access the database
     :return client: a client connected to the database instance
@@ -12,10 +24,9 @@ def db_connection(username, password):
     username = quote_plus(username)
     password = quote_plus(password)
     cluster = 'cluster0.hns6k.mongodb.net'
-    options = '/authSource=admin?ssl=true&tlsAllowInvalidCertificates=true'
-    uri = 'mongodb+srv://' + username + ':' + password + '@' + cluster + options
-    client = pymongo.MongoClient(uri)
-    return client
+    options = '?ssl=true&tlsAllowInvalidCertificates=true'
+    uri = 'mongodb+srv://' + username + ':' + password + '@' + cluster + "/movies" + options
+    return uri
 
 
 def get_frame_bounding_boxes(collection, movie_title, frame_id):

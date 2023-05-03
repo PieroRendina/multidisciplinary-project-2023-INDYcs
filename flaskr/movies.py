@@ -7,6 +7,7 @@ from ffpyplayer.player import MediaPlayer
 from werkzeug.exceptions import abort
 # from flaskr.auth import login_required
 # from flaskr.db import get_db
+from flaskr.db import get_frame_bounding_boxes
 
 bp = Blueprint('movies', __name__)
 global video_capture, title, frame_id
@@ -32,6 +33,8 @@ def select_movie():
         global title
         title = request.form['title']
         print(title)
+        bb = get_frame_bounding_boxes(movie_title="Iron Man vs Loki", frame_id=1)
+        print(bb)
         return render_template('movies/show_movie.html', title=title)
 
 
