@@ -10,7 +10,7 @@
     <video id="video_id" src="{{url_for('static', filename='/uploads/'+title+'.mp4')}}" height = "100%" width="100%" controls></video>
     <script>
         let video = document.getElementById('video_id');
-        let bounding_boxes = [];
+        let boundingBoxes = [];
         video.addEventListener('pause', function() {
             let currentFrame = video.currentTime * 24;
             //console.log('Current frame:', currentFrame);
@@ -48,14 +48,15 @@
                         overlay_string.innerText = "black t-shirt";
                         overlay_string.style.display = 'block';
                         video.parentElement.appendChild(overlay_string);
-                        bounding_boxes.push(overlay_string);
+                        boundingBoxes.push(overlay_string);
                     }
                 }).catch(error => console.error(error));
             video.addEventListener('play', function() {
-                for(let i = 0; i < bounding_boxes.length; i++) {
+                let numberOfBoundingBoxes = boundingBoxes.length;
+                for(let i = 0; i < numberOfBoundingBoxes; i++) {
                     let overlay_string = document.getElementById('overlay_string_'+i.toString());
                     overlay_string.remove();
-                    bounding_boxes.pop();
+                    boundingBoxes.pop();
                 }
             });
         });
