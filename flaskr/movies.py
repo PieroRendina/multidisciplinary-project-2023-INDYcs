@@ -7,7 +7,7 @@ from ffpyplayer.player import MediaPlayer
 from werkzeug.exceptions import abort
 # from flaskr.auth import login_required
 # from flaskr.db import get_db
-from flaskr.db import get_frame_bounding_boxes
+from flaskr.db import *
 
 bp = Blueprint('movies', __name__)
 global video_capture, title, frame_id
@@ -23,7 +23,7 @@ def index():
         ' ORDER BY created DESC'
     ).fetchall()
     """
-    movies = [{"title": "Inception"}, {"title": "Avengers_Age_of_Ultron"}]
+    movies = [{"title": "Inception"}, {"title": "Avengers_Age_of_Ultron"}, {"title": "Iron_Man_vs_Loki"}]
     return render_template('movies/index.html', movies=movies)
 
 
@@ -43,9 +43,16 @@ def show_movie():
 
 @bp.route('/pause_video', methods=['POST'])
 def pause_video():
-    bb = get_frame_bounding_boxes(movie_title="Iron Man vs Loki", frame_id=1)
-    print(bb)
-    return make_response(jsonify({'success': 'true', 'bounding_boxes': bb}), 200)
+    if request.method == 'POST':
+        input_data = request.get_json()
+        title = input_data['title']
+        frame_id = input_data['frame_id']
+        height = input_data['height']
+        width = input_data['width']
+        print(f"Title: {title}, Frame_id: {frame_id}, Height: {height}, Width: {width}")
+        bb, items = get_frame_bounding_boxes(movie_title=title, frame_id=frame_id)
+        print(bb)
+        return make_response(jsonify({'success': 'true', 'bounding_boxes': bb}), 200)
 
 
 def generate_movie_frames(title, frame_number=0):
