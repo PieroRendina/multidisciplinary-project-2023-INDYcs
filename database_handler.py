@@ -1,5 +1,9 @@
+import time
 import pymongo
 from urllib.parse import quote_plus
+import json
+from bson.objectid import ObjectId
+import pprint
 
 
 def db_connection(username: str, password: str) -> pymongo.MongoClient:
@@ -64,3 +68,34 @@ def get_detection_shape(collection, movie_title):
     detection_shape = (height, width)
     print(detection_shape)
     return detection_shape
+
+
+def create_movie_document(movie_json_file):
+    """
+    Method to create a document to be inserted in the MongoDB collection
+    :param movie_json_file: json file containing the information about the movie
+    :return document: document to be inserted in the MongoDB collection
+    """
+    frame_ids = []
+    for key in movie_json_file.keys():
+        try:
+            frame_ids.append(int(key))
+        except ValueError:
+            pass
+    print(frame_ids)
+    document = {}
+    document['title'] = movie_json_file['title']
+    document['detection_size'] = movie_json_file['detection_size']
+    document['frames'] = [
+        {"_id": ObjectId(frame_id.to_bytes(12, 'big')),
+         "Coordinates": [movie_json_file[str(frame_id)][box_id]['Coordinates']
+                        for box_id in movie_json_file[str(frame_id)].keys()]} for frame_id in frame_ids]
+    return document
+
+
+if __name__ == '__main__':
+    #db_client = db_connection('Piero_Rendina', 'R3nd1n@2021')
+    #movies_collection = db_client.movies.movies_info
+    movie_json_file = json.load(open('ironman_vs_loki.json', 'r'))
+    document = create_movie_document(movie_json_file)
+    pprint.pprint(document)
