@@ -25,17 +25,18 @@ def get_db():
 db = LocalProxy(get_db)
 
 
-def get_frame_bounding_boxes(movie_title, frame_id, fps=30):
+def get_frame_bounding_boxes(movie_title, timestamp, client_height, client_width):
     """
     Method to retrieve the bounding boxes associated to a frame in a movie
     :param movie_title: title of the movie whose frame is to retrieve
     :param frame_id: id of the frame to retrieve
     :return bounding_boxes: bounding boxes associated to the requested frame_id
     """
-    detection_fps = get_detection_fps(movie_title)
+    detection_fps, fps = get_detection_fps(movie_title)
     coeff = fps/detection_fps
-    frame_id = int(frame_id/coeff)
 
+    frame_id = int(timestamp*fps/coeff)
+    print(f"Frame id: {frame_id}")
     height, width = get_detection_shape(movie_title)
 
     movie_title = movie_title.replace("_", " ").lower()
@@ -45,20 +46,29 @@ def get_frame_bounding_boxes(movie_title, frame_id, fps=30):
     frame_info = list(frame_info)
     # TODO: it's assuming that the frame exists and it will be the first to be returned
     bounding_boxes = frame_info[0]["frame"]["Coordinates"]
+    print(f"Height ratio = {client_height/height}, Width ratio = {client_width/width}")
+
+    for box in bounding_boxes:
+        box[0] = int(box[0]*client_height/height)
+        box[1] = int(box[1]*client_width/width)
+        box[2] = int(box[2]*client_height/height)
+        box[3] = int(box[3]*client_width/width)
     items = frame_info[0]["frame"]["Items"]
 
     return bounding_boxes, items
 
 
-def get_detection_fps(movie_title: str) -> int:
+def get_detection_fps(movie_title: str) -> tuple[int, int]:
     """
     Method used to retrieve the fps used when running the detection algorithm
     :param movie_title: title of the movie whose detection fps is to retrieve
-    :return detection_fps: fps used by the detection algorithm
+    :return fps_tuple: tuple containing the detection fps and the fps of the movie
     """
-    documents = list(db.movies_info.find({"title": movie_title.replace("_", " ").lower()}, {"detection_fps": 1, "_id": 0}))
+    movie_title = movie_title.replace("_", " ").lower()
+    documents = list(db.movies_info.find({"title": movie_title}, {"detection_fps": 1, "fps": 1, "_id": 0}))
     assert len(documents) == 1
-    return documents[0]["detection_fps"]
+    fps_tuple = (documents[0]["detection_fps"], documents[0]["fps"])
+    return fps_tuple
 
 
 def get_detection_shape(movie_title: str) -> tuple:

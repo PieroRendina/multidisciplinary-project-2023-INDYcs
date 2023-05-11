@@ -46,11 +46,12 @@ def pause_video():
     if request.method == 'POST':
         input_data = request.get_json()
         title = input_data['title']
-        frame_id = input_data['frame_id']
+        timestamp = input_data['time']
         height = input_data['height']
         width = input_data['width']
-        print(f"Title: {title}, Frame_id: {frame_id}, Height: {height}, Width: {width}")
-        bb, items = get_frame_bounding_boxes(movie_title=title, frame_id=frame_id)
+        print(f"Title: {title}, Timestamp: {timestamp}, Height: {height}, Width: {width}")
+        bb, items = get_frame_bounding_boxes(movie_title=title, timestamp=timestamp,
+                                             client_height=height, client_width=width)
         print(bb)
         return make_response(jsonify({'success': 'true', 'bounding_boxes': bb}), 200)
 

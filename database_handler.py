@@ -100,12 +100,13 @@ def get_detection_fps(collection, movie_title):
     :param collection: MongoDB collection which stores a document for each movie with its own array of frames
     :return detection_fps: fps used by the detection algorithm
     """
-    documents = list(collection.find({"title": movie_title}, {"detection_fps": 1, "_id": 0}))
+    documents = list(collection.find({"title": movie_title}, {"detection_fps": 1, "fps": 1, "_id": 0}))
     assert len(documents) == 1
-    return documents[0]["detection_fps"]
+    return documents[0]["detection_fps"], documents[0]["fps"]
 
 
 if __name__ == '__main__':
     db_client = db_connection('Piero_Rendina', 'R3nd1n@2021')
     movies_collection = db_client.movies.movies_info
-    pprint.pprint(get_detection_fps(movies_collection, "Iron man vs Loki"))
+    document = create_movie_document(json.load(open("ironman_vs_loki.json")))
+    movies_collection.insert_one(document)
