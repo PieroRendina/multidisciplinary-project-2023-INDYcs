@@ -93,7 +93,7 @@ def generate_movie_frames(title, frame_number=0):
             # audio
                 img, t = audio_frame
             yield (b'--frame\r\n' 
-                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
             # To adjust the frame rate and the speed of the video-player
             cv2.waitKey(25)
         else:
