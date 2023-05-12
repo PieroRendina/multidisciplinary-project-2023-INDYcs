@@ -49,10 +49,10 @@ def get_frame_bounding_boxes(movie_title, timestamp, client_height, client_width
     print(f"Height ratio = {client_height/height}, Width ratio = {client_width/width}")
 
     for box in bounding_boxes:
-        box[0] = int(box[0]*client_height/height)
-        box[1] = int(box[1]*client_width/width)
-        box[2] = int(box[2]*client_height/height)
-        box[3] = int(box[3]*client_width/width)
+        box[0] = int(box[0]*client_width/width)
+        box[1] = int(box[1]*client_height/height)
+        box[2] = int(box[2]*client_width/width)
+        box[3] = int(box[3]*client_height/height)
     items = frame_info[0]["frame"]["Items"]
 
     return bounding_boxes, items

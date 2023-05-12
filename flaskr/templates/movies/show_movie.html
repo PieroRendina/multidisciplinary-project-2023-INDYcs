@@ -30,15 +30,15 @@
                 })
             }).then(response => response.json())
                 .then((data) => {
-                    //console.log("Bounding boxes found " +data.bounding_boxes);
+                    console.log("Bounding boxes found " +data.bounding_boxes);
                     //console.log("Number of bounding boxes " +data.bounding_boxes.length.toString());
                     for(let i = 0; i < data.bounding_boxes.length; i++) {
                         let bounding_box = data.bounding_boxes[i];
-                        console.log(data.bounding_boxes);
+                        console.log(data.bounding_box);
                         let overlay_string = document.createElement('div');
                         let link = document.createElement('a');
                         link.href = "https://www.emp-online.it/p/us-tour-%2778/234630.html?forceThisShop=1&wgu=270765_116019_16782911911272_3bedf06700&wgexpiry=1709827191&wt_mc=pt.webgains.116019..49483.0.";
-                        link.innerText = "black t-shirt";
+                        link.innerText = data.items[i];
                         overlay_string.appendChild(link);
                         overlay_string.setAttribute('id', 'overlay_string_'+i.toString());
                         link.style.color = 'red';
@@ -46,8 +46,8 @@
                         overlay_string.style.fontWeight = 'bold';
                         overlay_string.style.position = 'absolute';
                         // compute the position to place the string
-                        let topValue = (parseInt(bounding_box[0]) + parseInt(bounding_box[2])*0.5).toString() + "px";
-                        let leftValue = (parseInt(bounding_box[1]) + parseInt(bounding_box[3])*0.5).toString() + "px";
+                        let topValue = (parseInt(bounding_box[1]) + parseInt(bounding_box[3])*0.5).toString() + "px";
+                        let leftValue = (parseInt(bounding_box[0]) + parseInt(bounding_box[2])*0.5).toString() + "px";
                         //console.log(topValue, leftValue);
                         overlay_string.style.top = topValue;
                         overlay_string.style.left = leftValue;
@@ -80,7 +80,7 @@
                 /*
                 let height = document.getElementById('video_id').clientHeight;
                 let width = document.getElementById('video_id').clientWidth;
-                console.log("Client height " + height.toStrin\g() + " Client width " + width.toString());
+                console.log("Client height " + height.toString() + " Client width " + width.toString());
                 console.log("Number of bounding boxes " + numberOfBoundingBoxes.toString());
                 if (numberOfBoundingBoxes > 0) {
                     for (let i = 0; i < numberOfBoundingBoxes; i++) {
