@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Movie{% endblock %}</h1>
+  <h1>{% block title %}{{title.replace("_", " ")}}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -15,8 +15,14 @@
             let currentTime = video.currentTime;
             let height = document.getElementById('video_div').clientHeight;
             let width = document.getElementById('video_div').clientWidth;
+
+            let videoHeight = document.getElementById("video_id").videoHeight;
+            let videoWidth = document.getElementById("video_id").videoWidth;
             //console.log('Current frame:', currentFrame);
             //console.log('Title:', '{{title}}')
+
+
+            console.log("Video height: " + videoHeight, "Video width: " + videoWidth);
             fetch('/pause_video', {
                 method: 'POST',
                 headers: {
@@ -34,10 +40,11 @@
                     //console.log("Number of bounding boxes " +data.bounding_boxes.length.toString());
                     for(let i = 0; i < data.bounding_boxes.length; i++) {
                         let bounding_box = data.bounding_boxes[i];
-                        console.log(data.bounding_box);
+                        console.log(bounding_box);
                         let overlay_string = document.createElement('div');
                         let link = document.createElement('a');
-                        link.href = "https://www.emp-online.it/p/us-tour-%2778/234630.html?forceThisShop=1&wgu=270765_116019_16782911911272_3bedf06700&wgexpiry=1709827191&wt_mc=pt.webgains.116019..49483.0.";
+                        //link.href = "https://www.emp-online.it/p/us-tour-%2778/234630.html?forceThisShop=1&wgu=270765_116019_16782911911272_3bedf06700&wgexpiry=1709827191&wt_mc=pt.webgains.116019..49483.0.";
+                        link.href = data.links[i];
                         link.innerText = data.items[i];
                         overlay_string.appendChild(link);
                         overlay_string.setAttribute('id', 'overlay_string_'+i.toString());
@@ -56,6 +63,12 @@
                         overlay_string.style.display = 'block';
                         video.parentElement.appendChild(overlay_string);
                         boundingBoxes.push(overlay_string);
+
+                        link.addEventListener('click', function(event) {
+                            event.preventDefault(); // Prevent the default link behavior
+                            const url = link.getAttribute('href');
+                            window.open(url, '_blank');
+                        })
                     }
                 }).catch(error => console.error(error));
             });
@@ -68,29 +81,7 @@
             }
         });
         video.addEventListener('fullscreenchange', function () {
-            let numberOfBoundingBoxes = boundingBoxes.length;
-            if(document.fullscreenElement === video) {
-                let video_container = document.getElementById('video_div');
-                if (numberOfBoundingBoxes > 0) {
-                    for (let i = 0; i < numberOfBoundingBoxes; i++) {
-                        let overlay_string = document.getElementById('overlay_string_' + i.toString());
-                        overlay_string.style.position = 'fixed';
-                    }
-                }
-                /*
-                let height = document.getElementById('video_id').clientHeight;
-                let width = document.getElementById('video_id').clientWidth;
-                console.log("Client height " + height.toString() + " Client width " + width.toString());
-                console.log("Number of bounding boxes " + numberOfBoundingBoxes.toString());
-                if (numberOfBoundingBoxes > 0) {
-                    for (let i = 0; i < numberOfBoundingBoxes; i++) {
-                        let overlay_string = document.getElementById('overlay_string_' + i.toString());
-                        console.log(overlay_string.style.display);
-                    }
-                }
-            }
-        });*/
-            }});
+           });
     </script>
     </div>
     </body>

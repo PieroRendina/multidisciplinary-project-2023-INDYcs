@@ -108,60 +108,28 @@ def get_detection_fps(collection, movie_title):
     return documents[0]["detection_fps"], documents[0]["fps"]
 
 
+def get_movie_product(collection, movie_title):
+    """
+    Method used to retrieve the products associated to a movie
+    :param collection: MongoDB collection which stores a document for each movie with its details
+    :param movie_title: title of the movie whose products are to retrieve
+    :return: the list of subdocuments containing the products associated to the movie with their link and name
+    """
+    documents = list(collection.find({"title": movie_title}, {"products": 1, "_id": 0}))
+    assert len(documents) == 1
+
+    product_link = []
+    for product in documents[0]["products"]:
+        subdocument = list(collection.find({str(product)+".name": str(product)}, {str(product)+".name": 1,
+                                                                             str(product)+".link": 1,
+                                                                             "_id": 0}))
+        product_link.append({subdocument[0][str(product)]["name"]: subdocument[0][str(product)]["link"]})
+
+    return product_link
+
+
+
 if __name__ == '__main__':
     db_client = db_connection('Piero_Rendina', 'R3nd1n@2021')
     movies_collection = db_client.movies.movies_info
-    column_names = ['Title', 'Link', 'Products', 'Products_link', 'Search_criteria', 'Image_name']
-
-    # Read the excel file
-    video_list = pd.read_excel('Dataset/Movie_list.xlsx',
-                               header=0,
-                               names=column_names)
-
-    # Dictionary containing the info about all the video
-    video_info = {}
-    # Dictionary containing the info about all the products
-    product_info = {}
-    # Dictionary containing the pairs video-product
-    video_product_info = {}
-
-    # For each row in the dataframe
-    for info in tqdm(video_list.to_numpy()):
-        # Read the title of the vide
-        video_title = info[0]
-        # Convert the strings into lists
-        product_names = info[2].split(", ")
-        products_link = info[3].split(", ")
-        search_criteria = info[4].split(", ")
-        image_name = info[5].split(", ")
-
-        # Save the info about the video
-        # Create the sub-dictionary for the video
-        video_info[video_title] = {}
-        video_info[video_title]['title'] = video_title
-        video_info[video_title]['link'] = info[1]
-        video_info[video_title]['products'] = product_names
-
-        # If no errors in the row (TODO: extend the check to all the rows)
-        if products_link[0].removeprefix('"').removesuffix('"') != "Error":
-            # Save the info about each product
-            for product_index in range(len(product_names)):
-                # Create the sub-dictionary of the product
-                product_info[product_names[product_index]] = {}
-                product_info[product_names[product_index]]['name'] = product_names[product_index]
-                product_info[product_names[product_index]]['link'] = products_link[product_index]
-                product_info[product_names[product_index]]['searching criteria'] = search_criteria[product_index]
-                # Read and encode the image using base64
-                with open(r"Dataset/Product_images/{}".format(image_name[product_index].removeprefix('"').removesuffix('"')),
-                          "rb") as image_file:
-                    encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-                    product_info[product_names[product_index]]['image'] = encoded_image
-
-        with open('Dataset/video_list.json', 'w') as video_list_file:
-            json.dump(video_info, video_list_file, indent=3)
-
-        with open('Dataset/product_list.json', 'w') as product_list_file:
-            json.dump(product_info, product_list_file, indent=3)
-
-    movies_collection.insert_one(json.load(open("Dataset/video_list.json")))
-    movies_collection.insert_one(json.load(open("Dataset/product_list.json")))
+    get_movie_product(movies_collection, "iron man vs loki")

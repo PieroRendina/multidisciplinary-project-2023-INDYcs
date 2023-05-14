@@ -1,5 +1,3 @@
-import bson
-
 from flask import current_app, g
 from werkzeug.local import LocalProxy
 from flask_pymongo import PyMongo
@@ -29,7 +27,9 @@ def get_frame_bounding_boxes(movie_title, timestamp, client_height, client_width
     """
     Method to retrieve the bounding boxes associated to a frame in a movie
     :param movie_title: title of the movie whose frame is to retrieve
-    :param frame_id: id of the frame to retrieve
+    :param timestamp: timestamp of the frame to retrieve, sent by the client
+    :param client_height: height of the client's screen
+    :param client_width: width of the client's screen
     :return bounding_boxes: bounding boxes associated to the requested frame_id
     """
     detection_fps, fps = get_detection_fps(movie_title)
@@ -53,9 +53,15 @@ def get_frame_bounding_boxes(movie_title, timestamp, client_height, client_width
         box[1] = int(box[1]*client_height/height)
         box[2] = int(box[2]*client_width/width)
         box[3] = int(box[3]*client_height/height)
+
     items = frame_info[0]["frame"]["Items"]
 
-    return bounding_boxes, items
+    items_details = get_movie_product(movie_title)
+    # TODO handle the case where we have multiple items in the frame or in the movie
+    if len(items_details) == 1:
+        links = [items_details[0][list(items_details[0].keys())[0]]]*len(bounding_boxes)
+
+    return bounding_boxes, items, links
 
 
 def get_detection_fps(movie_title: str) -> tuple[int, int]:
@@ -90,3 +96,23 @@ def get_detection_shape(movie_title: str) -> tuple:
     detection_shape = (height, width)
     print(detection_shape)
     return detection_shape
+
+
+def get_movie_product(movie_title: str) -> list:
+    """
+    Method used to retrieve the products associated to a movie
+    :param collection: MongoDB collection which stores a document for each movie with its details
+    :param movie_title: title of the movie whose products are to retrieve
+    :return: the list of subdocuments containing the products associated to the movie with their link and name
+    """
+    documents = list(db.movies_info.find({"title": movie_title}, {"products": 1, "_id": 0}))
+    assert len(documents) == 1
+
+    product_link = []
+    for product in documents[0]["products"]:
+        subdocument = list(db.movies_info.find({str(product)+".name": str(product)}, {str(product)+".name": 1,
+                                                                             str(product)+".link": 1,
+                                                                             "_id": 0}))
+        product_link.append({subdocument[0][str(product)]["name"]: subdocument[0][str(product)]["link"]})
+
+    return product_link
