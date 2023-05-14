@@ -53,7 +53,7 @@ def pause_video():
         bb, items, links = get_frame_bounding_boxes(movie_title=title, timestamp=timestamp,
                                              client_height=height, client_width=width)
         print(bb)
-        return make_response(jsonify({'success': 'true', 'bounding_boxes': lbb, 'items': items, 'links': links}), 200)
+        return make_response(jsonify({'success': 'true', 'bounding_boxes': bb, 'items': items, 'links': links}), 200)
 
 
 def generate_movie_frames(title, frame_number=0):
