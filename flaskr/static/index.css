@@ -14,7 +14,7 @@
 }
 
 .home-main-section .img-wrapper .indycs_image {
-    background-image: url(/video-object-detection/flaskr/static/images/indycs_image.png);
+    background-image: url("images/indycs_image.png");
     flex-grow: 1;
     max-height: 70vh;
     min-width: 30vw;

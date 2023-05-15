@@ -24,7 +24,7 @@ def index():
     ).fetchall()
     """
     movies = [{"title": "Inception"}, {"title": "Avengers_Age_of_Ultron"}, {"title": "Iron_Man_vs_Loki"}]
-    return render_template('movies/index.html', movies=movies)
+    return render_template('movies/index_figma.html', movies=movies)
 
 
 @bp.route('/select_movie', methods=["GET", "POST"])
@@ -54,6 +54,12 @@ def pause_video():
                                              client_height=height, client_width=width)
         print(bb)
         return make_response(jsonify({'success': 'true', 'bounding_boxes': bb, 'items': items, 'links': links}), 200)
+
+
+@bp.route('/movies/discover.html')
+def discover():
+    movies = [{"title": "Iron_Man_vs_Loki"}, {"title": "Avengers_Age_of_Ultron"}, {"title": "Inception"}]
+    return render_template('movies/discover.html', movies=movies)
 
 
 def generate_movie_frames(title, frame_number=0):
