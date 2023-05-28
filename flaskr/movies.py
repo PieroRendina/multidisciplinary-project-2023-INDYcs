@@ -62,6 +62,12 @@ def discover():
     return render_template('movies/discover.html', movies=movies)
 
 
+@bp.route('/movies/movie_view.html')
+def movie_view():
+    movie_title = request.args.get('movie')
+    return render_template('movies/movie_view.html', title=movie_title)
+
+
 def generate_movie_frames(title, frame_number=0):
     # TODO change this according to the location of the file
     filepath = "flaskr" + title
