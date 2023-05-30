@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="/static/figma_style.css" rel="stylesheet">
-    <link href="/static/discover.css" rel="stylesheet">
+    <link href="/static/movie_view.css" rel="stylesheet">
     <title>INDYcs</title>
 </head>
 <body class="full-height-grow">
@@ -22,24 +22,27 @@
                 </ul>
             </nav>
         </header>
-        <div id="video_div" style="position: relative; width: 100%; height: 100%; ">
-            <h4>{{title.replace('_',' ')}}</h4>
-            <video id="video_id" src="{{url_for('static', filename='/uploads/'+title+'.mp4')}}" height = "100%" width="100%" controls></video>
+        <h4>{{title.replace('_',' ')}}</h4>
+        <div id="video_div" class="video-div">
+            <video id="video_id" src="{{url_for('static', filename='/uploads/'+title+'.mp4')}}" controls></video>
             <script>
                 let video = document.getElementById('video_id');
+                video.addEventListener('loadedmetadata', function() {
+                  let videoWidth = video.videoWidth;
+                  let videoHeight = video.videoHeight;
+                  console.log("Video width: " + videoWidth + "px");
+                  console.log("Video height: " + videoHeight + "px");
+                });
+
+
                 let boundingBoxes = [];
                 video.addEventListener('pause', function() {
                     let currentTime = video.currentTime;
+
                     let height = document.getElementById('video_div').clientHeight;
                     let width = document.getElementById('video_div').clientWidth;
-
-                    let videoHeight = document.getElementById("video_id").videoHeight;
-                    let videoWidth = document.getElementById("video_id").videoWidth;
                     //console.log('Current frame:', currentFrame);
-                    //console.log('Title:', '{{title}}')
 
-
-                    console.log("Video height: " + videoHeight, "Video width: " + videoWidth);
                     fetch('/pause_video', {
                         method: 'POST',
                         headers: {
