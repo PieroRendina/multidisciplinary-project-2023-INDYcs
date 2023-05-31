@@ -9,3 +9,4 @@ pafy
 Flask
 pytube
 ffpyplayer
+pyaudio

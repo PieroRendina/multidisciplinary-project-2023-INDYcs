@@ -1,12 +1,13 @@
 import ffpyplayer
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, Response
+    Blueprint, flash, g, redirect, render_template, request, url_for, Response, make_response, jsonify
 )
 import cv2
 from ffpyplayer.player import MediaPlayer
 from werkzeug.exceptions import abort
 # from flaskr.auth import login_required
 # from flaskr.db import get_db
+from flaskr.db import *
 
 bp = Blueprint('movies', __name__)
 global video_capture, title, frame_id
@@ -22,17 +23,16 @@ def index():
         ' ORDER BY created DESC'
     ).fetchall()
     """
-    movies = [{"title": "Inception"}, {"title": "Avengers_Age_of_Ultron"}]
-    return render_template('movies/index.html', movies=movies)
+    movies = [{"title": "Inception"}, {"title": "Avengers_Age_of_Ultron"}, {"title": "Iron_Man_vs_Loki"}]
+    return render_template('movies/index_figma.html', movies=movies)
 
 
 @bp.route('/select_movie', methods=["GET", "POST"])
 def select_movie():
-    is_playing = eval(request.form["is_playing"])
     if request.method == "POST":
         global title
         title = request.form['title']
-        return render_template('movies/show_movie.html', title=title, playing=True)
+        return render_template('movies/show_movie.html', title=title)
 
 
 @bp.route('/show_movie')
@@ -43,11 +43,29 @@ def show_movie():
 
 @bp.route('/pause_video', methods=['POST'])
 def pause_video():
-    global frame_id
-    # Store the frame we are stopping at
-    frame_id = int(video_capture.get(cv2.CAP_PROP_POS_FRAMES))
-    video_capture.release()
-    return 'Video paused'
+    if request.method == 'POST':
+        input_data = request.get_json()
+        title = input_data['title']
+        timestamp = input_data['time']
+        height = input_data['height']
+        width = input_data['width']
+        print(f"Title: {title}, Timestamp: {timestamp}, Height: {height}, Width: {width}")
+        bb, items, links = get_frame_bounding_boxes(movie_title=title, timestamp=timestamp,
+                                             client_height=height, client_width=width)
+        print(bb)
+        return make_response(jsonify({'success': 'true', 'bounding_boxes': bb, 'items': items, 'links': links}), 200)
+
+
+@bp.route('/movies/discover.html')
+def discover():
+    movies = [{"title": "Iron_Man_vs_Loki"}, {"title": "Avengers_Age_of_Ultron"}, {"title": "Inception"}]
+    return render_template('movies/discover.html', movies=movies)
+
+
+@bp.route('/movies/movie_view.html')
+def movie_view():
+    movie_title = request.args.get('movie')
+    return render_template('movies/movie_view.html', title=movie_title)
 
 
 def generate_movie_frames(title, frame_number=0):
@@ -76,7 +94,7 @@ def generate_movie_frames(title, frame_number=0):
         print("Error opening video file")
         # Read until video is completed
     while video_capture.isOpened():
-        success, frame = video_capture.read()  # read the camera frame
+        success, frame = video_capture.read()  # read the camera framez
         audio_frame, val = audio_capture.get_frame()
         if success:
             ret, buffer = cv2.imencode('.jpg', frame)
@@ -87,7 +105,7 @@ def generate_movie_frames(title, frame_number=0):
             # audio
                 img, t = audio_frame
             yield (b'--frame\r\n' 
-                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
             # To adjust the frame rate and the speed of the video-player
             cv2.waitKey(25)
         else:

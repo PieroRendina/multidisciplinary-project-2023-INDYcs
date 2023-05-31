@@ -1,13 +1,17 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, g, current_app
+from database_handler import get_db_uri
+from flask_pymongo import PyMongo
 
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    # set up the credentials for the MongoDB database instance
+    mongo_uri = get_db_uri('Piero_Rendina', 'R3nd1n@2021')
     app.config.from_mapping(
         SECRET_KEY='dev', threaded=True,
-        #DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        MONGO_URI=mongo_uri,
     )
 
     if test_config is None:
