@@ -26,6 +26,27 @@
 }
 
 
+.bounding-box {
+  position: absolute;
+  border: 0.3rem solid #008325;
+  z-index: 1;
+  display: block;
+  border-radius: 0.1rem;
+}
+
+.link-div {
+  position: absolute;
+  z-index: 1;
+  display: block;
+}
+
+.product-link {
+  color: #00ff49;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+
 .home-page-circle-1 {
     position: absolute;
     width: 25vw;

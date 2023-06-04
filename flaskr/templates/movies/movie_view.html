@@ -63,30 +63,46 @@
                                 let bounding_box = data.bounding_boxes[i];
                                 console.log(bounding_box);
                                 let overlay_string = document.createElement('div');
+                                overlay_string.className = 'link-div';
                                 let link = document.createElement('a');
+                                link.className = 'product-link';
+                                let bb = document.createElement('div');
+                                bb.className = 'bounding-box';
+
+                                let bbTopValue = (parseInt(bounding_box[1]) - parseInt(bounding_box[3])*0.5).toString() + "px";
+                                let bbLeftValue = (parseInt(bounding_box[0]) - parseInt(bounding_box[2])*0.5).toString() + "px";
+                                /* Old positioning implementation
+                                let topValue = (parseInt(bounding_box[1]) + parseInt(bounding_box[3])*0.5).toString() + "px";
+                                let leftValue = (parseInt(bounding_box[0]) + parseInt(bounding_box[2])*0.5).toString() + "px";
+                                 */
+
+                                // Bounding box positioning
+                                bb.style.top = bbTopValue;
+                                bb.style.left = bbLeftValue;
+                                bb.style.height = bounding_box[3].toString() + "px";
+                                bb.style.width = bounding_box[2].toString() + "px";
+                                video.parentElement.appendChild(bb);
+
+                                // Showing the link to the product page
                                 link.href = data.links[i];
                                 link.innerText = data.items[i];
                                 overlay_string.appendChild(link);
                                 overlay_string.setAttribute('id', 'overlay_string_'+i.toString());
-                                link.style.color = 'red';
-                                link.style.fontSize = '1.2rem';
-                                overlay_string.style.fontWeight = 'bold';
-                                overlay_string.style.position = 'absolute';
+                                bb.setAttribute('id', 'bounding_box_'+i.toString());
+                                //link.style.color = 'red';
+                                //link.style.fontSize = '1.2rem';
+                                //overlay_string.style.fontWeight = 'bold';
+                                //overlay_string.style.position = 'absolute';
                                 // compute the position to place the string
-                                /*
-                                Old implementation
-                                let topValue = (parseInt(bounding_box[1]) + parseInt(bounding_box[3])*0.5).toString() + "px";
-                                let leftValue = (parseInt(bounding_box[0]) + parseInt(bounding_box[2])*0.5).toString() + "px";
-                                 */
+
 
                                 let topValue = (parseInt(bounding_box[1])).toString() + "px";
                                 let leftValue = (parseInt(bounding_box[0])).toString() + "px";
                                 //console.log(topValue, leftValue);
                                 overlay_string.style.top = topValue;
                                 overlay_string.style.left = leftValue;
-                                overlay_string.style.zIndex = "1";
-                                //overlay_string.innerText = "black t-shirt";
-                                overlay_string.style.display = 'block';
+                                //overlay_string.style.zIndex = "1";
+                                //overlay_string.style.display = 'block';
                                 video.parentElement.appendChild(overlay_string);
                                 boundingBoxes.push(overlay_string);
 
@@ -102,7 +118,9 @@
                     let numberOfBoundingBoxes = boundingBoxes.length;
                     for(let i = 0; i < numberOfBoundingBoxes; i++) {
                         let overlay_string = document.getElementById('overlay_string_'+i.toString());
+                        let bb = document.getElementById('bounding_box_'+i.toString());
                         overlay_string.remove();
+                        bb.remove();
                         boundingBoxes.pop();
                     }
                 });
