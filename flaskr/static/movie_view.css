@@ -24,3 +24,47 @@
     height: 100%;
     object-fit: cover;
 }
+
+
+.home-page-circle-1 {
+    position: absolute;
+    width: 25vw;
+    height: 25vw;
+    border-radius: 50%;
+    background-color: rgba(0, 131, 37, 0.1);
+    bottom: 5vw;
+    left: 5vw;
+    z-index: -1;
+}
+
+.home-page-circle-2 {
+    position: absolute;
+    width: 20vw;
+    height: 20vw;
+    border-radius: 50%;
+    background-color: rgba(0, 131, 37, 0.1);
+    top: 5vw;
+    right: 10vw;
+    z-index: -1;
+}
+
+
+.home-page-circle-3 {
+    position: absolute;
+    overflow: hidden;
+    width: 35vw;
+    height: 35vw;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+}
+
+.home-page-circle-3::before {
+    content: '';
+    transform: translate(40%, 40%);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    background-color: rgba(0, 131, 37, 0.1);
+}

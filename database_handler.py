@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 import json
 from bson.objectid import ObjectId
 import pprint
+import numpy as np
 import base64
 import pandas as pd
 from tqdm import tqdm
@@ -52,7 +53,7 @@ def create_movie_document(movie_json_file):
     item_description = "black t-shirt"
     document['frames'] = [
         {"_id": ObjectId(frame_id.to_bytes(12, 'big')),
-         "Coordinates": [movie_json_file[str(frame_id)][box_id]['Coordinates']
+         "Coordinates": [(np.array(movie_json_file[str(frame_id)][box_id]['Coordinates'])*document['detection_size'][0]).tolist()
                          for box_id in movie_json_file[str(frame_id)].keys()],
          "Items": [item_description for _ in movie_json_file[str(frame_id)].keys()]}
                          for frame_id in frame_ids]
@@ -128,8 +129,8 @@ def get_movie_product(collection, movie_title):
     return product_link
 
 
-
 if __name__ == '__main__':
     db_client = db_connection('Piero_Rendina', 'R3nd1n@2021')
     movies_collection = db_client.movies.movies_info
-    get_movie_product(movies_collection, "iron man vs loki")
+    doc = create_movie_document(json.load(open("ironman_vs_loki_2fps.json")))
+    movies_collection.insert_one(doc)

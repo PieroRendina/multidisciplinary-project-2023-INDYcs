@@ -51,7 +51,7 @@ def pause_video():
         width = input_data['width']
         print(f"Title: {title}, Timestamp: {timestamp}, Height: {height}, Width: {width}")
         bb, items, links = get_frame_bounding_boxes(movie_title=title, timestamp=timestamp,
-                                             client_height=height, client_width=width)
+                                                    client_height=height, client_width=width)
         print(bb)
         return make_response(jsonify({'success': 'true', 'bounding_boxes': bb, 'items': items, 'links': links}), 200)
 

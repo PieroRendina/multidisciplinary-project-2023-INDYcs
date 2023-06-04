@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="/static/figma_style.css" rel="stylesheet">
     <link href="/static/movie_view.css" rel="stylesheet">
+    <link href="">
     <title>INDYcs</title>
 </head>
 <body class="full-height-grow">
@@ -68,12 +69,18 @@
                                 overlay_string.appendChild(link);
                                 overlay_string.setAttribute('id', 'overlay_string_'+i.toString());
                                 link.style.color = 'red';
-                                link.style.fontSize = '18px';
+                                link.style.fontSize = '1.2rem';
                                 overlay_string.style.fontWeight = 'bold';
                                 overlay_string.style.position = 'absolute';
                                 // compute the position to place the string
+                                /*
+                                Old implementation
                                 let topValue = (parseInt(bounding_box[1]) + parseInt(bounding_box[3])*0.5).toString() + "px";
                                 let leftValue = (parseInt(bounding_box[0]) + parseInt(bounding_box[2])*0.5).toString() + "px";
+                                 */
+
+                                let topValue = (parseInt(bounding_box[1])).toString() + "px";
+                                let leftValue = (parseInt(bounding_box[0])).toString() + "px";
                                 //console.log(topValue, leftValue);
                                 overlay_string.style.top = topValue;
                                 overlay_string.style.left = leftValue;
