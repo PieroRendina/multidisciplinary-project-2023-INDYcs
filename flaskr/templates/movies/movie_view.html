@@ -28,6 +28,7 @@
             <video id="video_id" src="{{url_for('static', filename='/uploads/'+title+'.mp4')}}" controls></video>
             <script>
                 let video = document.getElementById('video_id');
+                let video_div = document.getElementById('video_div');
                 video.addEventListener('loadedmetadata', function() {
                   let videoWidth = video.videoWidth;
                   let videoHeight = video.videoHeight;
@@ -104,6 +105,7 @@
                                 //overlay_string.style.zIndex = "1";
                                 //overlay_string.style.display = 'block';
                                 video.parentElement.appendChild(overlay_string);
+
                                 boundingBoxes.push(overlay_string);
 
                                 link.addEventListener('click', function(event) {
@@ -123,8 +125,6 @@
                         bb.remove();
                         boundingBoxes.pop();
                     }
-                });
-                video.addEventListener('fullscreenchange', function () {
                 });
             </script>
         </div>

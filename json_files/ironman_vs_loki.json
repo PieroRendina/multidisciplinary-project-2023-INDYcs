@@ -1,7 +1,12 @@
 {
-    "title": "Iron man vs Loki",
-    "sampling_rate": 5,
-    "resolution": "360p",
+    "title": "iron man vs loki",
+    "detection_fps": 5,
+    "fps": 30,
+    "detection_size": [768,768],
+    "link": "https://www.youtube.com/watch?v=NsRLOV4pHyk",
+    "products": [
+         "US Tour '78 T-Shirt nero  Black Sabbath"
+    ],
     "0": {},
     "1": {},
     "2": {},

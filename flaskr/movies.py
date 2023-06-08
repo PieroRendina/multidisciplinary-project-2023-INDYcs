@@ -58,7 +58,7 @@ def pause_video():
 
 @bp.route('/movies/discover.html')
 def discover():
-    movies = [{"title": "Iron_Man_vs_Loki"}, {"title": "Avengers_Age_of_Ultron"}, {"title": "Inception"}]
+    movies = [{"title": "Iron_Man_vs_Loki"}, {"title": "Avengers_Age_of_Ultron"}, {"title": "I_Love_Me"}]
     return render_template('movies/discover.html', movies=movies)
 
 

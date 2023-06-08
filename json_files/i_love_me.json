@@ -1,7 +1,10 @@
 {
-    "title": "I Love Me",
-    "sampling_rate": 5,
-    "resolution": "360p",
+    "title": "i love me",
+    "fps": 24,
+    "detection_fps": 5,
+    "detection_size": [768,768],
+    "link": "https://www.youtube.com/watch?v=vImvzQCb0o8",
+    "products": ["Red Coat"],
     "0": {},
     "1": {},
     "2": {},
@@ -902,8 +905,7 @@
                 0.3098229467868805,
                 0.47094300389289856
             ]
-        }
-    },
+        },
     "605": {
         "0": {
             "Coordinates": [

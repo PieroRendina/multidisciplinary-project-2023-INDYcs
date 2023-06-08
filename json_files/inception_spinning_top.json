@@ -1,7 +1,10 @@
 {
-    "title": "Inception - Ending",
-    "sampling_rate": 5,
-    "resolution": "360p",
+    "title": "inception",
+    "fps": 24,
+    "detection_fps": 5,
+    "detection_size": [768, 768],
+    "link": "https://www.youtube.com/watch?v=XQPy88-E2zo",
+    "products": ["Giroscopio in Metallo Trottola d'Argento accurata"],
     "0": {},
     "1": {},
     "2": {},

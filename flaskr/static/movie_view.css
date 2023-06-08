@@ -28,7 +28,7 @@
 
 .bounding-box {
   position: absolute;
-  border: 0.3rem solid #008325;
+  border: 0.2rem solid #008325;
   z-index: 1;
   display: block;
   border-radius: 0.1rem;
@@ -44,6 +44,8 @@
   color: #00ff49;
   font-size: 1rem;
   font-weight: bold;
+  display: block;
+  z-index: 1;
 }
 
 

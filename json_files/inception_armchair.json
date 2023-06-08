@@ -1,7 +1,12 @@
 {
-    "title": "Inception_Armchair",
-    "sampling_rate": 5,
-    "resolution": "360p",
+    "title": "inception",
+    "detection_fps": 24,
+    "fps": 5,
+    "detection_size": [768,768],
+    "link": "https://www.youtube.com/watch?v=XQPy88-E2zo",
+    "products": [
+         "wooden armchair"
+    ],
     "0": {},
     "1": {},
     "2": {},

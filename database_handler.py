@@ -50,7 +50,8 @@ def create_movie_document(movie_json_file):
             frame_ids.append(int(key))
         except ValueError:
             document[key] = movie_json_file[key]
-    item_description = "black t-shirt"
+    #TODO tune the item description when uploading the movie document
+    item_description = "grey t-shirt"
     document['frames'] = [
         {"_id": ObjectId(frame_id.to_bytes(12, 'big')),
          "Coordinates": [(np.array(movie_json_file[str(frame_id)][box_id]['Coordinates'])*document['detection_size'][0]).tolist()
@@ -132,5 +133,5 @@ def get_movie_product(collection, movie_title):
 if __name__ == '__main__':
     db_client = db_connection('Piero_Rendina', 'R3nd1n@2021')
     movies_collection = db_client.movies.movies_info
-    doc = create_movie_document(json.load(open("ironman_vs_loki_2fps.json")))
+    doc = create_movie_document(json.load(open("json_files/bruce_banner_tony_stark.json")))
     movies_collection.insert_one(doc)
