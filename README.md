@@ -1,4 +1,4 @@
-# Video Object Detection
+# Products recognition in Movies
 
 Project of the **Multidisciplinary course** offered at Politecnico di Milano A.Y.2022/2023.
 
