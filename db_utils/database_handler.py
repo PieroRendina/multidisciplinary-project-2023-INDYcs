@@ -133,5 +133,5 @@ def get_movie_product(collection, movie_title):
 if __name__ == '__main__':
     db_client = db_connection('Piero_Rendina', 'R3nd1n@2021')
     movies_collection = db_client.movies.movies_info
-    doc = create_movie_document(json.load(open("json_files/bruce_banner_tony_stark.json")))
+    doc = create_movie_document(json.load(open("../json_files/bruce_banner_tony_stark.json")))
     movies_collection.insert_one(doc)

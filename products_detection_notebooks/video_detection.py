@@ -1,12 +1,9 @@
 import cv2
-import numpy as np
 import torch.cuda
 from torchvision import transforms
 from transformers import CLIPProcessor, CLIPModel
 from tqdm.notebook import tqdm
-import time
-import random
-from database_handler import *
+from db_utils.database_handler import *
 
 folder = "E:\\Yolo_v3_pretrained\\dataset\\videos\\"
 # dictionary to map the movie title and the respective local filepath

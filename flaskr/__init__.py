@@ -1,7 +1,6 @@
 import os
-from flask import Flask, render_template, g, current_app
-from database_handler import get_db_uri
-from flask_pymongo import PyMongo
+from flask import Flask
+from db_utils.database_handler import get_db_uri
 
 
 def create_app(test_config=None):
