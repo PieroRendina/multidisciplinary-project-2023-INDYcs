@@ -10,3 +10,5 @@ Flask
 pytube
 ffpyplayer
 pyaudio
+pandas
+Flask-Pymongo
