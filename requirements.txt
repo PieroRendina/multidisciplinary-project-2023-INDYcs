@@ -11,4 +11,4 @@ pytube
 ffpyplayer
 pyaudio
 pandas
-Flask-Pymongo
+Flask-PyMongo
