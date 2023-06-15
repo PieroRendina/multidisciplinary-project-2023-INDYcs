@@ -81,7 +81,7 @@ It will open a pop-up window where you need to select the file <code>mongodb_dum
 
 Then click on **Import**.
 
-Now you can run the application using the local database instance using the following command:
+Now you can run the application using the local database instance with the following command:
 ```
 flask --app flaskr:create_app(use_local_db=True) run
 ```
