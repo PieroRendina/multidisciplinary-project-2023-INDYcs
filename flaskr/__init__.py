@@ -3,11 +3,11 @@ from flask import Flask
 from db_utils.database_handler import get_db_uri
 
 
-def create_app(test_config=None):
+def create_app(use_local_db=False, test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     # set up the credentials for the MongoDB database instance
-    mongo_uri = get_db_uri('Piero_Rendina', 'R3nd1n@2021')
+    mongo_uri = get_db_uri('Piero_Rendina', 'R3nd1n@2021', use_local_db)
     app.config.from_mapping(
         SECRET_KEY='dev', threaded=True,
         MONGO_URI=mongo_uri,

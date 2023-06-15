@@ -22,18 +22,22 @@ def db_connection(username: str, password: str) -> pymongo.MongoClient:
     return client
 
 
-def get_db_uri(username: str, password: str) -> str:
+def get_db_uri(username: str, password: str, use_local_db=False) -> str:
     """
     Method to retrieve the connection URI for a MongoDB Atlas instance
     :param username: username to access the database
     :param password: password to access the database
+    :param use_local_db: boolean flag to indicate whether to use a local database or a remote one
     :return client: a client connected to the database instance
     """
-    username = quote_plus(username)
-    password = quote_plus(password)
-    cluster = 'cluster0.hns6k.mongodb.net'
-    options = '?ssl=true&tlsAllowInvalidCertificates=true'
-    uri = 'mongodb+srv://' + username + ':' + password + '@' + cluster + "/movies" + options
+    if not use_local_db:
+        username = quote_plus(username)
+        password = quote_plus(password)
+        cluster = 'cluster0.hns6k.mongodb.net'
+        options = '?ssl=true&tlsAllowInvalidCertificates=true'
+        uri = 'mongodb+srv://' + username + ':' + password + '@' + cluster + "/movies" + options
+    else:
+        uri = 'mongodb://localhost:27017/movies'
     return uri
 
 
@@ -51,7 +55,7 @@ def create_movie_document(movie_json_file):
         except ValueError:
             document[key] = movie_json_file[key]
     #TODO tune the item description when uploading the movie document
-    item_description = "grey t-shirt"
+    item_description = "t-shirt black Sabbath 1978"
     document['frames'] = [
         {"_id": ObjectId(frame_id.to_bytes(12, 'big')),
          "Coordinates": [(np.array(movie_json_file[str(frame_id)][box_id]['Coordinates'])*document['detection_size'][0]).tolist()
@@ -133,5 +137,6 @@ def get_movie_product(collection, movie_title):
 if __name__ == '__main__':
     db_client = db_connection('Piero_Rendina', 'R3nd1n@2021')
     movies_collection = db_client.movies.movies_info
-    doc = create_movie_document(json.load(open("../json_files/bruce_banner_tony_stark.json")))
+    doc = create_movie_document(json.load(open("C:/Users/Dell/Downloads/ironman_vs_loki.json")))
     movies_collection.insert_one(doc)
+    #pprint.pprint(doc)
