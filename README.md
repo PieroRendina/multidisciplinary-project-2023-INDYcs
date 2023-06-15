@@ -73,7 +73,7 @@ movies_info
 Then click on **Create Database**.
 
 
-To import the data into the database, you need to click on add data and then on **Import JSON/CSV file**.
+To import the data into the database, you need to click on **Add Data** and then on **Import JSON/CSV file**.
 As shown below:
 ![import_data](/readme_images/data_import.png)
 
